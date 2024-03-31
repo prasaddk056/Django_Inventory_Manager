@@ -1,0 +1,75 @@
+{% extends "inventory/base.html" %}
+
+{% block content %}
+    {% if messages %}
+        <div class="row mt-3">
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
+                    <div class="col-md-10 col-12 mx-auto alert alert-secondary">
+                        {{message}}
+                    </div>
+
+                {% else %}
+
+                    <div class="col-md-10 col-12 mx-auto alert alert-success">
+                        {{message}}
+                    </div> 
+
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-10 col-12 mx-auto mt-5">
+            <div class="d-flex justify-content-end">
+                <a href="{% url "add-item" %}" class="btn btn-primary">Add New Item</a>
+            </div>
+            <table class="table table-hover table-hover mt-3">
+                <thead>
+                    <tr>
+                        <th scope ="col">Name</th>
+                        <th scope ="col">Quantity</th>
+                        <th scope ="col">Category</th>
+                        <th scope ="col"></th>
+                        <th scope ="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if items|length == 0 %}
+                    <tr>
+                        <th scope="row">-</th>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    {% endif %}
+
+                    {% for item in items %}
+                        {% if item.id in low_inventory_ids %}
+                        <tr class='table-danger'>
+                            <td class="align-middle">{{ item.name }}</td>
+                            <td class="align-middle">{{ item.quantity }}</td>
+                            <td class="align-middle">{{ item.category.name}}</td>
+                            <td><a href= "{% url "edit-item" item.id %}" class="btn btn-primary">Edit</a></td>
+                            <td><a href= "{% url "delete-item" item.id %}" class="btn btn-primary">Delete</a></td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td class="align-middle">{{ item.name }}</td>
+                            <td class="align-middle">{{ item.quantity }}</td>
+                            <td class="align-middle">{{ item.category.name}}</td>
+                            <td><a href= "{% url "edit-item" item.id %}" class="btn btn-primary">Edit</a></td>
+                            <td><a href= "{% url "delete-item" item.id %}" class="btn btn-primary">Delete</a></td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock content %}
